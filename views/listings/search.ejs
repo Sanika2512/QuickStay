@@ -1,0 +1,1554 @@
+<% layout('/layouts/boilerplate') %>
+
+
+
+<style>
+    /* Search Page Custom Styles */
+    body {
+        padding-top: 80px;
+        background-color: #fafafa;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    }
+    
+    /* Search Header */
+    .search-header {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border-bottom: 1px solid #e8e8e8;
+        padding: 2rem 0;
+        margin-bottom: 1.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .search-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #FF385C 0%, #ff6b8b 50%, #FF385C 100%);
+    }
+    
+    .search-results-title {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #1a1a1a;
+        margin-bottom: 0.5rem;
+        line-height: 1.2;
+        letter-spacing: -0.3px;
+    }
+    
+    .results-count {
+        font-size: 1.1rem;
+        color: #5e5e5e;
+        font-weight: 500;
+    }
+    
+    /* Main Container */
+    .main-container {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+    
+    /* Filter Sidebar */
+    .filter-sidebar {
+        flex: 0 0 300px;
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        border: 1px solid #e8e8e8;
+        height: fit-content;
+        position: sticky;
+        top: 100px;
+        transition: all 0.3s ease;
+    }
+    
+    .filter-sidebar:hover {
+        box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+    }
+    
+    .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f0f0f0;
+    }
+    
+    .sidebar-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .sidebar-title i {
+        color: #FF385C;
+        background: rgba(255, 56, 92, 0.1);
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .clear-filters-btn {
+        background: none;
+        border: none;
+        color: #666;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 6px;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+    
+    .clear-filters-btn:hover {
+        color: #FF385C;
+        background: rgba(255, 56, 92, 0.05);
+    }
+    
+    /* Filter Section */
+    .filter-section {
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #f5f5f5;
+    }
+    
+    .filter-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+    
+    .filter-label {
+        display: block;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .filter-label i {
+        color: #FF385C;
+        font-size: 1rem;
+    }
+    
+    /* Price Range */
+    .price-input-container {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .price-input-group {
+        flex: 1;
+        position: relative;
+    }
+    
+    .price-input-group::before {
+        content: '₹';
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+        font-weight: 600;
+        z-index: 1;
+    }
+    
+    .price-input {
+        width: 100%;
+        padding: 0.75rem 0.75rem 0.75rem 2rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #333;
+        background: white;
+        transition: all 0.3s;
+    }
+    
+    .price-input:focus {
+        outline: none;
+        border-color: #FF385C;
+        box-shadow: 0 0 0 3px rgba(255, 56, 92, 0.1);
+    }
+    
+    .price-slider-container {
+        margin-top: 1rem;
+        padding: 0 0.5rem;
+    }
+    
+    .price-slider {
+        width: 100%;
+        height: 6px;
+        background: #e0e0e0;
+        border-radius: 3px;
+        outline: none;
+        -webkit-appearance: none;
+        margin-top: 0.5rem;
+    }
+    
+    .price-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 22px;
+        height: 22px;
+        background: #FF385C;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 3px solid white;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        transition: all 0.2s;
+    }
+    
+    .price-slider::-webkit-slider-thumb:hover {
+        transform: scale(1.2);
+        box-shadow: 0 3px 15px rgba(255, 56, 92, 0.3);
+    }
+    
+    /* Checkbox Grid */
+    .checkbox-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+    
+    .checkbox-item {
+        position: relative;
+    }
+    
+    .checkbox-input {
+        display: none;
+    }
+    
+    .checkbox-label-custom {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 1rem 0.75rem;
+        border: 2px solid #e8e8e8;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background: white;
+        text-align: center;
+        min-height: 80px;
+    }
+    
+    .checkbox-label-custom:hover {
+        border-color: #FF385C;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(255, 56, 92, 0.1);
+    }
+    
+    .checkbox-input:checked + .checkbox-label-custom {
+        border-color: #FF385C;
+        background: linear-gradient(135deg, rgba(255, 56, 92, 0.08) 0%, rgba(255, 56, 92, 0.02) 100%);
+        color: #FF385C;
+        box-shadow: 0 6px 20px rgba(255, 56, 92, 0.1);
+    }
+    
+    .checkbox-label-custom i {
+        font-size: 1.25rem;
+        color: #666;
+        transition: all 0.3s;
+    }
+    
+    .checkbox-input:checked + .checkbox-label-custom i {
+        color: #FF385C;
+        transform: scale(1.1);
+    }
+    
+    .checkbox-text {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #333;
+        transition: all 0.3s;
+    }
+    
+    .checkbox-input:checked + .checkbox-label-custom .checkbox-text {
+        color: #FF385C;
+    }
+    
+    /* Apply Filters Button */
+    .apply-filters-btn {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, #FF385C 0%, #ff6b8b 100%);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-top: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 15px rgba(255, 56, 92, 0.2);
+    }
+    
+    .apply-filters-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 56, 92, 0.3);
+    }
+    
+    .apply-filters-btn:active {
+        transform: translateY(-1px);
+    }
+    
+    /* Results Container */
+    .results-container {
+        flex: 1;
+        min-height: 500px;
+    }
+    
+    /* Sort Buttons */
+    .sort-container {
+        background: white;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        border: 1px solid #eaeaea;
+    }
+    
+    .sort-buttons {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+    
+    .sort-btn {
+        padding: 0.6rem 1.25rem;
+        border: 1.5px solid #e0e0e0;
+        background: white;
+        color: #424242;
+        border-radius: 10px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .sort-btn:hover {
+        border-color: #999;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    
+    .sort-btn.active {
+        border-color: #FF385C;
+        background: linear-gradient(135deg, #FF385C 0%, #ff6b8b 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(255, 56, 92, 0.2);
+    }
+    
+    .sort-btn i {
+        font-size: 0.9rem;
+    }
+    
+    /* Listing Card - Updated to match image 1 style */
+    .listing-card {
+        border-radius: 16px;
+        overflow: hidden;
+        background: white;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+        position: relative;
+        border: 1px solid #e8e8e8;
+    }
+    
+    .listing-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        border-color: transparent;
+    }
+    
+    /* Image Container */
+    .image-container {
+        position: relative;
+        height: 240px;
+        overflow: hidden;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+    
+    .listing-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .listing-card:hover .listing-image {
+        transform: scale(1.08);
+    }
+    
+    /* Image fallback */
+    .image-fallback {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    .image-fallback i {
+        font-size: 3rem;
+        opacity: 0.8;
+    }
+    
+    /* Wishlist Button */
+    .wishlist-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 38px;
+        height: 38px;
+        background: rgba(255, 255, 255, 0.95);
+        border: none;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.25s;
+        z-index: 2;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+    }
+    
+    .wishlist-btn:hover {
+        background: white;
+        transform: scale(1.12);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    }
+    
+    .wishlist-btn i {
+        color: #222;
+        font-size: 17px;
+        transition: all 0.25s;
+    }
+    
+    .wishlist-btn.active i {
+        color: #FF385C;
+    }
+    
+    /* Listing Info */
+    .listing-info {
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        height: calc(100% - 240px);
+    }
+    
+    .listing-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.5rem;
+    }
+    
+    .listing-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin: 0;
+        line-height: 1.3;
+        flex: 1;
+    }
+    
+    .listing-price-main {
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: #1a1a1a;
+        white-space: nowrap;
+    }
+    
+    .listing-price-per {
+        font-size: 0.85rem;
+        color: #666;
+        font-weight: 500;
+    }
+    
+    .listing-location {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .listing-location i {
+        color: #999;
+        font-size: 0.8rem;
+    }
+    
+    .listing-description {
+        color: #5e5e5e;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+        flex-grow: 1;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .listing-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 0.75rem;
+        border-top: 1px solid #f0f0f0;
+        margin-top: auto;
+    }
+    
+    .rating-badge {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        background: #f8f9fa;
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    
+    .rating-star {
+        color: #FF385C;
+        font-size: 0.8rem;
+    }
+    
+    .view-details-btn {
+        padding: 6px 16px;
+        background: linear-gradient(135deg, #FF385C 0%, #ff6b8b 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .view-details-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 56, 92, 0.3);
+        color: white;
+        text-decoration: none;
+    }
+    
+    /* No Results */
+    .no-results {
+        text-align: center;
+        padding: 5rem 2rem;
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+        margin: 2rem 0;
+    }
+    
+    .no-results-icon {
+        font-size: 4.5rem;
+        color: #e0e0e0;
+        margin-bottom: 1.75rem;
+    }
+    
+    .no-results-title {
+        font-size: 1.85rem;
+        font-weight: 800;
+        color: #1a1a1a;
+        margin-bottom: 1rem;
+        line-height: 1.3;
+    }
+    
+    .no-results-text {
+        color: #666;
+        max-width: 500px;
+        margin: 0 auto 2rem;
+        line-height: 1.6;
+        font-size: 1.05rem;
+    }
+    
+    .suggestions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.85rem;
+        justify-content: center;
+        margin-top: 2.5rem;
+    }
+    
+    .suggestion-btn {
+        padding: 0.85rem 1.75rem;
+        border: 2px solid #e8e8e8;
+        border-radius: 14px;
+        background: white;
+        color: #424242;
+        font-weight: 600;
+        transition: all 0.25s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .suggestion-btn:hover {
+        border-color: #222;
+        background: #222;
+        color: white;
+        text-decoration: none;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .suggestion-btn i {
+        font-size: 1.1rem;
+    }
+    
+    /* Loading Animation */
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255,255,255,0.92);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        backdrop-filter: blur(4px);
+    }
+    
+    .spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #FF385C;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* Search term highlight */
+    .highlight {
+        background: linear-gradient(120deg, rgba(255, 56, 92, 0.15) 0%, rgba(255, 56, 92, 0.05) 100%);
+        padding: 2px 6px;
+        border-radius: 6px;
+        color: #FF385C;
+        font-weight: 700;
+    }
+    
+    /* Responsive */
+    @media (max-width: 992px) {
+        .main-container {
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .filter-sidebar {
+            position: static;
+            flex: none;
+            width: 100%;
+        }
+        
+        .checkbox-grid {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        body {
+            padding-top: 70px;
+        }
+        
+        .search-header {
+            padding: 1.75rem 0;
+        }
+        
+        .search-results-title {
+            font-size: 1.75rem;
+        }
+        
+        .checkbox-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .price-input-container {
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .sort-container {
+            padding: 0.85rem;
+        }
+        
+        .sort-buttons {
+            gap: 0.5rem;
+        }
+        
+        .sort-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .image-container {
+            height: 220px;
+        }
+        
+        .listing-info {
+            padding: 1rem;
+        }
+        
+        .no-results {
+            padding: 3rem 1.5rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .search-results-title {
+            font-size: 1.5rem;
+        }
+        
+        .filter-sidebar {
+            padding: 1.25rem;
+        }
+        
+        .checkbox-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+        
+        .checkbox-label-custom {
+            min-height: 70px;
+            font-size: 0.9rem;
+        }
+        
+        .suggestions {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .suggestion-btn {
+            width: 100%;
+            max-width: 280px;
+            justify-content: center;
+        }
+    }
+</style>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+</div>
+
+<div class="container-fluid">
+    <!-- Search Header -->
+    <div class="search-header">
+        <div class="container">
+            <% 
+                // Capitalize first letter of search query
+                let displayQuery = searchQuery || '';
+                if (displayQuery && displayQuery.length > 0) {
+                    displayQuery = displayQuery.charAt(0).toUpperCase() + displayQuery.slice(1);
+                }
+                
+                // Get explore data if no search query
+                const exploreData = locals.exploreData || [];
+                const allListings = searchQuery ? listings : exploreData;
+            %>
+            
+            <h1 class="search-results-title">
+             <% if (searchQuery) { %>
+                   Stays matching <span class="text-danger"><%= displayQuery %></span>
+                 <% } else { %>
+                  Explore Amazing Stays
+                 <% } %>
+            </h1>
+
+            
+            <p class="results-count" id="resultsCount">
+                <% if (allListings.length === 0) { %>
+                    <% if (searchQuery) { %>
+                        No results found for &ldquo;<span class="text-danger"><%= displayQuery %></span>&rdquo;
+                    <% } else { %>
+                        No stays available at the moment
+                    <% } %>
+                <% } else if (allListings.length === 1) { %>
+                    <span class="fw-bold">1</span> amazing stay found
+                <% } else { %>
+                    <span class="fw-bold"><%= allListings.length %></span> amazing stays found
+                <% } %>
+            </p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Sort Buttons -->
+        <div class="sort-container">
+            <div class="sort-buttons">
+                <button class="sort-btn active" onclick="sortListings('newest')">
+                    <i class="fas fa-calendar-alt"></i>Newest
+                </button>
+                <button class="sort-btn" onclick="sortListings('price-low')">
+                    <i class="fas fa-sort-amount-down"></i>Price: Low to High
+                </button>
+                <button class="sort-btn" onclick="sortListings('price-high')">
+                    <i class="fas fa-sort-amount-up"></i>Price: High to Low
+                </button>
+                <button class="sort-btn" onclick="sortListings('rating')">
+                    <i class="fas fa-star"></i>Top Rated
+                </button>
+            </div>
+        </div>
+
+        <div class="main-container">
+            <!-- Filter Sidebar -->
+            <div class="filter-sidebar">
+                <div class="sidebar-header">
+                    <h3 class="sidebar-title">
+                        <i class="fas fa-sliders-h"></i>Filters
+                    </h3>
+                    <button class="clear-filters-btn" onclick="resetFilters()">
+                        <i class="fas fa-redo"></i>Clear All
+                    </button>
+                </div>
+
+                <!-- Price Range -->
+                <div class="filter-section">
+                    <label class="filter-label">
+                        <i class="fas fa-tag"></i>Price Range
+                    </label>
+                    
+                    <div class="price-input-container">
+                        <div class="price-input-group">
+                            <input type="number" class="price-input" id="minPriceInput" 
+                                   value="500" min="500" max="20000" step="100">
+                        </div>
+                        <span class="text-muted">to</span>
+                        <div class="price-input-group">
+                            <input type="number" class="price-input" id="maxPriceInput" 
+                                   value="15000" min="500" max="20000" step="100">
+                        </div>
+                    </div>
+                    
+                    <div class="price-slider-container">
+                        <input type="range" class="price-slider" id="priceSlider" 
+                               min="500" max="20000" value="15000" step="100">
+                    </div>
+                </div>
+
+                <!-- Property Type -->
+                <div class="filter-section">
+                    <label class="filter-label">
+                        <i class="fas fa-home"></i>Type of Place
+                    </label>
+                    
+                    <div class="checkbox-grid">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="type-all" class="checkbox-input" checked>
+                            <label for="type-all" class="checkbox-label-custom">
+                                <i class="fas fa-th"></i>
+                                <span class="checkbox-text">All Types</span>
+                            </label>
+                        </div>
+                        
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="type-beach" class="checkbox-input">
+                            <label for="type-beach" class="checkbox-label-custom">
+                                <i class="fas fa-umbrella-beach"></i>
+                                <span class="checkbox-text">Beach</span>
+                            </label>
+                        </div>
+                        
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="type-mountain" class="checkbox-input">
+                            <label for="type-mountain" class="checkbox-label-custom">
+                                <i class="fas fa-mountain"></i>
+                                <span class="checkbox-text">Mountain</span>
+                            </label>
+                        </div>
+                        
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="type-villa" class="checkbox-input">
+                            <label for="type-villa" class="checkbox-label-custom">
+                                <i class="fas fa-crown"></i>
+                                <span class="checkbox-text">Villa</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Amenities -->
+                <div class="filter-section">
+                    <label class="filter-label">
+                        <i class="fas fa-star"></i>Amenities
+                    </label>
+                    
+                    <div class="checkbox-grid">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="amenity-wifi" class="checkbox-input">
+                            <label for="amenity-wifi" class="checkbox-label-custom">
+                                <i class="fas fa-wifi"></i>
+                                <span class="checkbox-text">WiFi</span>
+                            </label>
+                        </div>
+                        
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="amenity-pool" class="checkbox-input">
+                            <label for="amenity-pool" class="checkbox-label-custom">
+                                <i class="fas fa-swimming-pool"></i>
+                                <span class="checkbox-text">Pool</span>
+                            </label>
+                        </div>
+                        
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="amenity-parking" class="checkbox-input">
+                            <label for="amenity-parking" class="checkbox-label-custom">
+                                <i class="fas fa-parking"></i>
+                                <span class="checkbox-text">Parking</span>
+                            </label>
+                        </div>
+                        
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="amenity-pet" class="checkbox-input">
+                            <label for="amenity-pet" class="checkbox-label-custom">
+                                <i class="fas fa-paw"></i>
+                                <span class="checkbox-text">Pet Friendly</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Apply Filters Button -->
+                <button class="apply-filters-btn" onclick="applyFilters()">
+                    <i class="fas fa-filter"></i>Apply Filters
+                </button>
+            </div>
+
+            <!-- Results Grid -->
+            <div class="results-container">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 g-4" id="listingsGrid">
+                    <% if (allListings.length > 0) { %>
+                        <% allListings.forEach((listing, index) => { %>
+                            <%
+                                 const listItem = listing;
+                                  const title = listItem.title || listItem.name || 'Luxury Stay';
+                                  const location = listItem.location || listItem.city || 'India';
+                                  const description = listItem.description || listItem.desc || 'Premium stay';
+                                  const price = listItem.price || listItem.price_per_night || 1200;
+                                 const rating = listItem.rating || listItem.review_score || 4.5;
+                                 const type = listItem.type || listItem.category || 'beach';
+
+                                const imageUrl =
+                                listItem.image?.url ||
+                                listItem.images?.[0]?.url ||
+                                '/images/default.jpg';
+
+                           const fallbackImages = {
+                                    beach: [
+                                    'https://images.unsplash.com/photo-1507525428034-b723cf961d3e',
+                                    'https://images.unsplash.com/photo-1506953823976-52e1fdc0149a'
+                                     ],
+                                      mountain: [
+                                     'https://images.unsplash.com/photo-1506905925346-21bda4d32df4',
+                                     'https://images.unsplash.com/photo-1464278533981-50106e6176b1'
+                                      ],
+                                      villa: [
+                                       'https://images.unsplash.com/photo-1613977257363-707ba9348227',
+                                       'https://images.unsplash.com/photo-1613545325278-f24b0cae1224'
+                                         ]
+                                       };
+
+                                      let fallbackImage = fallbackImages[type]
+                                       ? fallbackImages[type][index % 2]
+                                        : 'https://images.unsplash.com/photo-1566073771259-6a8506099945';
+                                    %>
+
+                            <div class="col listing-item" 
+                                 data-price="<%= price %>"
+                                 data-rating="<%= rating %>"
+                                 data-type="<%= type %>"
+                                 data-created="<%= listing.createdAt ? new Date(listing.createdAt).getTime() : Date.now() %>">
+                                <div class="listing-card">
+                                    <!-- Image Container -->
+                                    <div class="image-container">
+                                        <% if (imageUrl) { %>
+                                            <img src="<%= imageUrl %>" 
+                                                 alt="<%= title %>" 
+                                                 class="listing-image"
+                                                 onerror="this.onerror=null; this.src='<%= fallbackImage %>';">
+                                        <% } else { %>
+                                            <img src="<%= fallbackImage %>" 
+                                                 alt="<%= title %>" 
+                                                 class="listing-image">
+                                        <% } %>
+                                        
+                                        <!-- Wishlist Button -->
+                                        <button class="wishlist-btn" onclick="toggleWishlist(this, '<%= listing._id || index %>')">
+                                            <i class="far fa-heart"></i>
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- Listing Info -->
+                                    <div class="listing-info">
+                                        <div class="listing-header">
+                                            <h3 class="listing-title" data-original="<%= title %>">
+                                                <%= title.length > 25 ? title.substring(0, 25) + '...' : title %>
+                                            </h3>
+                                            <div class="listing-price-main">
+                                                ₹<%= price %>
+                                                <span class="listing-price-per">/ night</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <p class="listing-location" data-original="<%= location %>">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <%= location.length > 30 ? location.substring(0, 30) + '...' : location %>
+                                        </p>
+                                        
+                                        <p class="listing-description" data-original="<%= description %>">
+                                            <%= description.length > 80 ? description.substring(0, 80) + '...' : description %>
+                                        </p>
+                                        
+                                        <div class="listing-footer">
+                                            <div class="rating-badge">
+                                                <i class="fas fa-star rating-star"></i>
+                                                <span><%= rating.toFixed(1) %></span>
+                                            </div>
+                                            <a href="/listings/<%= listing._id || index %>" class="view-details-btn">
+                                                View Details
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <!-- No Results -->
+                        <div class="col-12">
+                            <div class="no-results">
+                                <div class="no-results-icon">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                                <h2 class="no-results-title">No listings found</h2>
+                                <p class="no-results-text">
+                                    <% if (searchQuery) { %>
+                                        We couldn't find any stays matching &ldquo;<strong><%= displayQuery %></strong>&rdquo;. 
+                                    <% } else { %>
+                                        No stays are currently available.
+                                    <% } %>
+                                    Try adjusting your search or check out these popular destinations:
+                                </p>
+                                
+                                <div class="suggestions">
+                                    <a href="/explore?category=beach" class="suggestion-btn">
+                                        <i class="fas fa-umbrella-beach"></i>Beach
+                                    </a>
+                                    <a href="/explore?category=mountain" class="suggestion-btn">
+                                        <i class="fas fa-mountain"></i>Mountain
+                                    </a>
+                                    <a href="/explore?category=villa" class="suggestion-btn">
+                                        <i class="fas fa-crown"></i>Villa
+                                    </a>
+                                    <a href="/explore" class="suggestion-btn" style="background: linear-gradient(135deg, #FF385C 0%, #ff6b8b 100%); color: white; border-color: #FF385C;">
+                                        <i class="fas fa-home"></i>View All Listings
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize variables
+        const searchTerm = '<%= searchQuery %>' || '';
+        const capitalizedSearchTerm = '<%= displayQuery %>' || '';
+        let activeFilters = {
+            minPrice: 500,
+            maxPrice: 15000,
+            propertyTypes: [],
+            amenities: []
+        };
+        let currentSort = 'newest';
+        
+        // Highlight search terms
+        if (searchTerm && searchTerm.trim().length > 1) {
+            highlightSearchTerms(searchTerm);
+        }
+        
+        // Initialize price controls
+        const priceSlider = document.getElementById('priceSlider');
+        const minPriceInput = document.getElementById('minPriceInput');
+        const maxPriceInput = document.getElementById('maxPriceInput');
+        
+        // Set initial values
+        if (priceSlider) {
+            priceSlider.value = activeFilters.maxPrice;
+        }
+        if (minPriceInput) {
+            minPriceInput.value = activeFilters.minPrice;
+        }
+        if (maxPriceInput) {
+            maxPriceInput.value = activeFilters.maxPrice;
+        }
+        
+        // Sync price controls
+        if (priceSlider && minPriceInput && maxPriceInput) {
+            priceSlider.addEventListener('input', function() {
+                maxPriceInput.value = this.value;
+                activeFilters.maxPrice = parseInt(this.value);
+                updatePriceDisplay();
+            });
+            
+            minPriceInput.addEventListener('input', function() {
+                const value = Math.min(parseInt(this.value) || 500, 20000);
+                this.value = value;
+                activeFilters.minPrice = value;
+                updatePriceDisplay();
+            });
+            
+            maxPriceInput.addEventListener('input', function() {
+                const value = Math.max(parseInt(this.value) || 500, activeFilters.minPrice);
+                this.value = value;
+                priceSlider.value = value;
+                activeFilters.maxPrice = value;
+                updatePriceDisplay();
+            });
+            
+            [minPriceInput, maxPriceInput].forEach(input => {
+                input.addEventListener('blur', function() {
+                    this.value = parseInt(this.value) || 500;
+                });
+            });
+        }
+        
+        // Setup checkbox listeners
+        setupCheckboxListeners();
+        
+        // Setup sort buttons
+        setupSortButtons();
+        
+        // Function to highlight search terms
+        function highlightSearchTerms(term) {
+            const elements = document.querySelectorAll('.listing-title, .listing-location, .listing-description');
+            const escapedTerm = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const regex = new RegExp(`(${escapedTerm})`, 'gi');
+            
+            elements.forEach(element => {
+                const originalText = element.getAttribute('data-original') || element.textContent;
+                if (originalText.toLowerCase().includes(term.toLowerCase())) {
+                    const highlightedText = originalText.replace(
+                        regex, 
+                        '<span class="highlight">$1</span>'
+                    );
+                    element.innerHTML = highlightedText;
+                }
+            });
+        }
+        
+        // Setup checkbox listeners
+        function setupCheckboxListeners() {
+            // Property type checkboxes
+            const propertyCheckboxes = document.querySelectorAll('input[type="checkbox"][id^="type-"]');
+            propertyCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (this.id === 'type-all' && this.checked) {
+                        propertyCheckboxes.forEach(cb => {
+                            if (cb.id !== 'type-all') cb.checked = false;
+                        });
+                        activeFilters.propertyTypes = [];
+                    } else if (this.id !== 'type-all' && this.checked) {
+                        document.getElementById('type-all').checked = false;
+                        const typeValue = this.id.replace('type-', '');
+                        if (!activeFilters.propertyTypes.includes(typeValue)) {
+                            activeFilters.propertyTypes.push(typeValue);
+                        }
+                    } else if (this.id !== 'type-all' && !this.checked) {
+                        const typeValue = this.id.replace('type-', '');
+                        const index = activeFilters.propertyTypes.indexOf(typeValue);
+                        if (index > -1) {
+                            activeFilters.propertyTypes.splice(index, 1);
+                        }
+                        if (activeFilters.propertyTypes.length === 0) {
+                            document.getElementById('type-all').checked = true;
+                        }
+                    }
+                    
+                    updateCheckboxVisuals();
+                });
+            });
+            
+            // Amenity checkboxes
+            const amenityCheckboxes = document.querySelectorAll('input[type="checkbox"][id^="amenity-"]');
+            amenityCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const amenity = this.id.replace('amenity-', '');
+                    if (this.checked) {
+                        if (!activeFilters.amenities.includes(amenity)) {
+                            activeFilters.amenities.push(amenity);
+                        }
+                    } else {
+                        const index = activeFilters.amenities.indexOf(amenity);
+                        if (index > -1) {
+                            activeFilters.amenities.splice(index, 1);
+                        }
+                    }
+                    
+                    updateCheckboxVisuals();
+                });
+            });
+        }
+        
+        // Update checkbox visuals
+        function updateCheckboxVisuals() {
+            const allCheckboxes = document.querySelectorAll('.checkbox-input');
+            allCheckboxes.forEach(checkbox => {
+                const label = checkbox.nextElementSibling;
+                if (checkbox.checked) {
+                    label.style.transform = 'scale(1.02)';
+                    setTimeout(() => {
+                        label.style.transform = 'scale(1)';
+                    }, 150);
+                }
+            });
+        }
+        
+        // Setup sort buttons
+        function setupSortButtons() {
+            const sortButtons = document.querySelectorAll('.sort-btn');
+            sortButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    sortButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+        }
+        
+        // Update price display
+        function updatePriceDisplay() {
+            if (minPriceInput && maxPriceInput) {
+                minPriceInput.style.borderColor = '#FF385C';
+                maxPriceInput.style.borderColor = '#FF385C';
+                setTimeout(() => {
+                    minPriceInput.style.borderColor = '';
+                    maxPriceInput.style.borderColor = '';
+                }, 300);
+            }
+        }
+        
+        // Apply filters function
+        window.applyFilters = function() {
+            showLoading(true);
+            
+            const applyBtn = document.querySelector('.apply-filters-btn');
+            applyBtn.style.transform = 'scale(0.95)';
+            applyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>Applying...';
+            
+            setTimeout(() => {
+                const listings = document.querySelectorAll('.listing-item');
+                let visibleCount = 0;
+                
+                listings.forEach(listing => {
+                    const price = parseInt(listing.dataset.price) || 0;
+                    const type = listing.dataset.type || '';
+                    let shouldShow = price >= activeFilters.minPrice && price <= activeFilters.maxPrice;
+                    
+                    // Apply property type filter
+                    if (shouldShow && activeFilters.propertyTypes.length > 0 && !activeFilters.propertyTypes.includes('all')) {
+                        shouldShow = activeFilters.propertyTypes.includes(type);
+                    }
+                    
+                    if (shouldShow) {
+                        listing.style.display = 'block';
+                        visibleCount++;
+                        listing.style.animation = 'fadeIn 0.3s ease';
+                    } else {
+                        listing.style.display = 'none';
+                    }
+                });
+                
+                // Update results count
+                updateResultsCount(visibleCount);
+                
+                applyBtn.style.transform = '';
+                applyBtn.innerHTML = '<i class="fas fa-filter"></i>Apply Filters';
+                
+                showLoading(false);
+                
+                showToast(`${visibleCount} stays found with current filters`, 'success');
+                
+                if (visibleCount > 0) {
+                    setTimeout(() => {
+                        document.querySelector('.results-container').scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }, 100);
+                }
+            }, 800);
+        };
+        
+        // Reset filters function
+        window.resetFilters = function() {
+            showLoading(true);
+            
+            if (priceSlider) priceSlider.value = 15000;
+            if (minPriceInput) minPriceInput.value = 500;
+            if (maxPriceInput) maxPriceInput.value = 15000;
+            
+            activeFilters = {
+                minPrice: 500,
+                maxPrice: 15000,
+                propertyTypes: [],
+                amenities: []
+            };
+            
+            document.querySelectorAll('.checkbox-input').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            document.getElementById('type-all').checked = true;
+            
+            setTimeout(() => {
+                document.querySelectorAll('.listing-item').forEach((item, index) => {
+                    item.style.display = 'block';
+                    item.style.animation = `fadeIn 0.3s ease ${index * 0.05}s`;
+                });
+                
+                const totalListings = <%= allListings.length %>;
+                updateResultsCount(totalListings);
+                
+                currentSort = 'newest';
+                document.querySelectorAll('.sort-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelector('.sort-btn').classList.add('active');
+                sortListings('newest');
+                
+                showLoading(false);
+                
+                showToast('All filters have been reset', 'info');
+            }, 600);
+        };
+        
+        // Sort listings function
+        window.sortListings = function(sortType) {
+            showLoading(true);
+            currentSort = sortType;
+            
+            setTimeout(() => {
+                const grid = document.getElementById('listingsGrid');
+                const items = Array.from(document.querySelectorAll('.listing-item'));
+                
+                items.sort((a, b) => {
+                    const aPrice = parseInt(a.dataset.price) || 0;
+                    const bPrice = parseInt(b.dataset.price) || 0;
+                    const aRating = parseFloat(a.dataset.rating) || 0;
+                    const bRating = parseFloat(b.dataset.rating) || 0;
+                    const aCreated = parseInt(a.dataset.created) || 0;
+                    const bCreated = parseInt(b.dataset.created) || 0;
+                    
+                    switch(sortType) {
+                        case 'newest':
+                            return bCreated - aCreated;
+                        case 'price-low':
+                            return aPrice - bPrice;
+                        case 'price-high':
+                            return bPrice - aPrice;
+                        case 'rating':
+                            return bRating - aRating;
+                        default:
+                            return 0;
+                    }
+                });
+                
+                items.forEach((item, index) => {
+                    item.style.animation = `slideUp 0.3s ease ${index * 0.03}s`;
+                    grid.appendChild(item);
+                });
+                
+                setTimeout(() => {
+                    items.forEach(item => {
+                        item.style.animation = '';
+                    });
+                }, 500);
+                
+                showLoading(false);
+                
+                let sortMessage = '';
+                switch(sortType) {
+                    case 'newest': sortMessage = 'Sorted by newest'; break;
+                    case 'price-low': sortMessage = 'Sorted by price: low to high'; break;
+                    case 'price-high': sortMessage = 'Sorted by price: high to low'; break;
+                    case 'rating': sortMessage = 'Sorted by rating'; break;
+                }
+                showToast(sortMessage, 'success');
+            }, 600);
+        };
+        
+        // Wishlist toggle function
+        window.toggleWishlist = function(button, listingId) {
+            const icon = button.querySelector('i');
+            
+            button.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                button.style.transform = '';
+            }, 150);
+            
+            if (icon.classList.contains('far')) {
+                icon.style.transform = 'scale(1.3)';
+                setTimeout(() => {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas', 'text-danger');
+                    button.classList.add('active');
+                    icon.style.transform = '';
+                }, 150);
+                
+                showToast('Added to wishlist!', 'success');
+            } else {
+                icon.style.transform = 'scale(0.7)';
+                setTimeout(() => {
+                    icon.classList.remove('fas', 'text-danger');
+                    icon.classList.add('far');
+                    button.classList.remove('active');
+                    icon.style.transform = '';
+                }, 150);
+                
+                showToast('Removed from wishlist', 'info');
+            }
+        };
+        
+        // Update results count
+        function updateResultsCount(count) {
+            const resultsCount = document.getElementById('resultsCount');
+            if (count === 0) {
+                if (searchTerm) {
+                    resultsCount.innerHTML = `No results found for &ldquo;<span class="text-danger">${capitalizedSearchTerm}</span>&rdquo;`;
+                } else {
+                    resultsCount.innerHTML = `No stays available`;
+                }
+            } else if (count === 1) {
+                resultsCount.innerHTML = `<span class="fw-bold">1</span> amazing stay found`;
+            } else {
+                resultsCount.innerHTML = `<span class="fw-bold">${count}</span> amazing stays found`;
+            }
+            
+            resultsCount.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                resultsCount.style.transform = '';
+            }, 150);
+        }
+        
+        // Show/hide loading
+        function showLoading(show) {
+            const overlay = document.getElementById('loadingOverlay');
+            if (show) {
+                overlay.style.display = 'flex';
+            } else {
+                overlay.style.display = 'none';
+            }
+        }
+        
+        // Toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `alert alert-${type === 'success' ? 'success' : 'info'} alert-dismissible fade show position-fixed`;
+            toast.style.cssText = `
+                top: 20px; 
+                right: 20px; 
+                z-index: 9999; 
+                min-width: 300px; 
+                animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2.7s;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            `;
+            toast.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'} me-2"></i>
+                    <span>${message}</span>
+                </div>
+                <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.remove();
+                }
+            }, 3000);
+        }
+        
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            
+            @keyframes slideUp {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Initialize with default sorting
+        sortListings('newest');
+    });
+</script>

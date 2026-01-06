@@ -1,0 +1,310 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+      padding-top: 72px;
+ 
+}
+
+
+/* ================= ALL LISTINGS CARDS ================= */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -12px;
+  margin-right: -12px;
+  padding-top: 8px;
+}
+
+.col {
+  flex: 0 0 33.3333%;
+  max-width: 33.3333%;
+  padding-left: 12px;
+  padding-right: 12px;
+    margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 992px) {
+  .col {
+    flex: 0 0 50%;
+    max-width: 50%;
+    
+  }
+}
+
+/* Small screens */
+@media (max-width: 600px) {
+  .col {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+.card {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.card-img-top {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: all 0.3s;
+}
+
+.card-img-top:hover {
+  filter: brightness(110%);
+}
+
+
+
+.card-body {
+  padding: 16px;
+}
+
+.card-text b {
+  font-size: 18px;
+}
+
+.card-text {
+  font-size: 14px;
+  color: #4b5563;
+}
+
+
+
+
+
+
+
+
+/* ================= MAIN CONTAINER ================= */
+
+.listing-detail-container {
+  width: 100%;
+  max-width: 1100px;
+  background: white;
+  border-radius: 20px;
+  border: 3px solid grey;
+  overflow: hidden;
+   margin: 0 auto; 
+}
+
+/* ================= IMAGE ================= */
+.listing-image-container {
+  width: 80%;
+  height: 450px;
+  margin: 24px auto 8px;
+  border: 3px solid white;
+  border-radius: 22px;
+  overflow: hidden;
+  display: block;
+}
+
+
+.listing-image-curved {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 18px;        
+
+}
+
+/* ================= CONTENT ================= */
+
+.listing-content {
+    padding: 18px 34px 28px;
+}
+
+.listing-title {
+  font-size: 30px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.listing-owner {
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.owner-name {
+  font-weight: 600;
+}
+
+.listing-location {
+  color: #6b7280;
+  font-size: 15px;
+  margin-bottom: 16px;
+}
+
+.listing-price {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 22px;
+}
+
+.listing-price span {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 400;
+}
+
+/* ================= ACTION BUTTONS ================= */
+
+.listing-actions {
+  display: flex;
+  gap: 14px;
+}
+
+.btn-edit {
+  background: #ef4444;
+  color: #fff;
+  padding: 9px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  border: none;
+  font-weight: 500;
+}
+
+.btn-edit:hover {
+  background: #dc2626;
+}
+
+.btn-delete {
+  background: #111827;
+  color: #fff;
+  padding: 9px 20px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-delete:hover {
+  background: #000;
+}
+
+footer {
+  background-color: #e5e7eb;
+  width: 100%;
+  padding: 30px 0;
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+     
+}
+
+/* Just in case, add this for show.ejs */
+
+
+.footer-container {
+  text-align: center;         /* center all content horizontally */
+  display: flex;
+  flex-direction: column;     /* stack vertically */
+  align-items: center;
+  gap: 12px;                  /* space between icons, brand, links */
+}
+
+.f-info-socials {
+  display: flex;
+  justify-content: center;    /* center icons horizontally */
+  gap: 12px;                  /* spacing between icons */
+}
+
+.f-info-socials i {
+  font-size: 24px;
+  color: #111827;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.f-info-socials i:hover {
+  color: #ef4444; /* hover effect */
+}
+
+.f-info-brand {
+  font-weight: 600;
+  color: #111827;
+  font-size: 18px;
+}
+
+.f-info-links {
+  display: flex;
+  justify-content: center;    /* center links horizontally */
+  gap: 16px;                  /* spacing between links */
+}
+
+.f-info-links a {
+  text-decoration: none;
+  color: #111827;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.f-info-links a:hover {
+  color: #ef4444;
+}
+
+.edit-preview-img {
+  width: 250px;        /* control size */
+  height: 180px;
+  object-fit: cover;  /* crop properly */
+  border-radius: 8px;
+  margin-top: 8px;
+  display: block;
+}
+
+/* LOGIN PAGE BACKGROUND */
+/* ===== GLOBAL RESET ===== */
+.login-page {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+/* ===== LEFT IMAGE SECTION ===== */
+.login-image {
+  background: url("") center center / cover no-repeat;
+  position: relative;
+  height: 100vh;
+}
+
+.login-image::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.image-overlay {
+  position: absolute;
+  bottom: 60px;
+  left: 60px;
+  z-index: 2;
+  color: #fff;
+  max-width: 420px;
+}
+
+.image-overlay h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.image-overlay p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  opacity: 0.9;
+}

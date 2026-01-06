@@ -1,0 +1,237 @@
+<% layout("/layouts/boilerplate") %>
+
+<!-- Font Awesome -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+/>
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* ================= PAGE ================= */
+.login-page {
+  min-height: calc(100vh - 120px);
+  margin-top: 30px;
+   margin-bottom: 40px;
+}
+
+/* ================= LEFT IMAGE ================= */
+.login-image {
+  position: relative;
+  background-image: url("https://plus.unsplash.com/premium_photo-1753985633926-eb589dec89c1?q=80&w=1400&auto=format&fit=crop");
+  background-size: cover;
+  background-position: center;
+}
+
+/* Overlay */
+.login-image::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.35),
+    rgba(0,0,0,0.65)
+  );
+}
+
+/* Text on image */
+.image-overlay {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  color: #fff;
+}
+
+.image-overlay h1 {
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.image-overlay p {
+  font-size: 1rem;
+  opacity: 0.9;
+  max-width: 80%;
+}
+
+/* ================= RIGHT LOGIN CARD ================= */
+.login-card {
+  width: 100%;
+  max-width: 480px;
+  padding: 45px 40px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
+}
+
+/* Headings */
+.login-card h2 {
+  font-weight: 700;
+}
+
+.login-card p {
+  font-size: 0.95rem;
+}
+
+/* ================= INPUTS ================= */
+.form-control {
+  height: 50px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  padding-left: 45px;
+}
+
+.form-control:focus {
+  box-shadow: none;
+  border-color: #ff385c;
+}
+
+/* Icons */
+.input-icon {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  color: #adb5bd;
+  font-size: 14px;
+}
+
+/* ================= BUTTON ================= */
+.btn-primary {
+  height: 50px;
+  border-radius: 12px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  background: linear-gradient(to right, #ff385c, #ff5a5f);
+  border: none;
+}
+
+.btn-primary:hover {
+  opacity: 0.95;
+}
+
+/* ================= SOCIAL BUTTONS ================= */
+.social-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.social-btn.google { background: #db4437; }
+.social-btn.facebook { background: #1877f2; }
+.social-btn.apple { background: #000; }
+
+/* ================= LINKS ================= */
+.login-card a {
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-card a:hover {
+  text-decoration: underline;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+  .login-image {
+    display: none;
+  }
+
+  .login-card {
+    box-shadow: none;
+    border-radius: 0;
+    padding: 35px 25px;
+  }
+}
+</style>
+
+<div class="container-fluid login-page px-0">
+  <div class="row min-vh-100 g-0">
+
+    <!-- LEFT IMAGE SECTION -->
+    <div class="col-md-6 d-none d-md-block login-image">
+      <div class="image-overlay">
+        <h1>Wanderlust Tours</h1>
+        <p>Travel is the only purchase that enriches you beyond material wealth</p>
+      </div>
+    </div>
+
+    <!-- RIGHT LOGIN FORM -->
+    <div class="col-md-6 d-flex align-items-center justify-content-center">
+      <div class="login-card">
+
+        <h2 class="mb-1">Welcome Back</h2>
+        <p class="text-muted mb-4">Login with Email</p>
+
+        <form action="/login" method="POST">
+
+          <!-- USERNAME -->
+          <div class="mb-3 position-relative">
+            <i class="fa fa-user input-icon"></i>
+            <input
+              name="username"
+              type="text"
+              class="form-control"
+              placeholder="Enter username"
+              required
+            />
+          </div>
+
+          <!-- PASSWORD -->
+          <div class="mb-3 position-relative">
+            <i class="fa fa-lock input-icon"></i>
+            <input
+              name="password"
+              type="password"
+              class="form-control"
+              placeholder="Enter password"
+              required
+            />
+          </div>
+
+          <div class="text-end mb-3">
+            <a href="#" class="small">Forgot your password?</a>
+          </div>
+
+          <button class="btn btn-primary w-100 mb-3">LOGIN</button>
+
+          <div class="text-center text-muted mb-3">OR</div>
+
+          <!-- SOCIAL LOGIN -->
+          <div class="d-flex justify-content-center gap-3 mb-3">
+            <button type="button" class="social-btn google"><i class="fab fa-google"></i></button>
+            <button type="button" class="social-btn facebook"><i class="fab fa-facebook-f"></i></button>
+            <button type="button" class="social-btn apple"><i class="fab fa-apple"></i></button>
+          </div>
+
+          <p class="text-center small">
+            Don’t have an account?
+            <a href="/register">Register Now</a>
+          </p>
+
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+</div>

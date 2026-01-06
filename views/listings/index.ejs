@@ -1,0 +1,271 @@
+<% layout("/layouts/boilerplate") %>
+
+<!-- ================= STYLES ================= -->
+<style>
+.search-bar-container {
+  max-width: 800px;
+  margin: 2rem auto 3rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  border-radius: 32px;
+  border: 1px solid #ddd;
+}
+
+/* FILTER BAR */
+#filters {
+  position: sticky;
+  top: 72px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 14px 32px;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.filters-container {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.filter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 70px;
+  cursor: pointer;
+  color: #6b7280;
+  transition: 0.2s;
+}
+.filter i { font-size: 20px; }
+.filter.active { color: #000; }
+.filter:hover { transform: translateY(-2px); }
+
+.filter-count {
+  font-size: 10px;
+  background: #ff385c;
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 999px;
+}
+
+/* ================= PROFESSIONAL RECTANGLE TOGGLE ================= */
+.tax-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  font-size: 14px;
+  color: #374151;
+  padding: 8px 12px;
+  border: 2px solid #000; 
+   border-radius: 12px;  
+}
+
+.toggle-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90px;
+  height: 36px;
+  border: 2px solid #000; /* black border */
+  border-radius: 8px; /* slightly rounded */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #fff; /* white background for contrast */
+  user-select: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: #000;
+}
+
+.toggle-card.active {
+  background: #000;  /* black background when active */
+  color: #fff;       /* white text when active */
+  border-color: #000;
+}
+
+/* TAX INFO BADGE INSIDE CARD */
+.tax-badge {
+  display: inline-block;
+  background: #ff385c;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-left: 8px;
+  transition: all 0.3s ease;
+}
+</style>
+
+<!-- ================= FILTER UI ================= -->
+<div id="filters">
+  <div class="filters-container">
+    <div class="filter active" data-filter="all">
+      <i class="fa-solid fa-globe"></i>All
+      <span id="count-all" class="filter-count">0</span>
+    </div>
+    <div class="filter" data-filter="trending">
+      <i class="fa-solid fa-fire"></i>Trending
+      <span id="count-trending" class="filter-count">0</span>
+    </div>
+    <div class="filter" data-filter="rooms">
+      <i class="fa-solid fa-bed"></i>Rooms
+      <span id="count-rooms" class="filter-count">0</span>
+    </div>
+    <div class="filter" data-filter="cities">
+      <i class="fa-solid fa-city"></i>Cities
+      <span id="count-cities" class="filter-count">0</span>
+    </div>
+    <div class="filter" data-filter="mountains">
+      <i class="fa-solid fa-mountain"></i>Mountains
+      <span id="count-mountains" class="filter-count">0</span>
+    </div>
+    <div class="filter" data-filter="castles">
+      <i class="fa-solid fa-fort-awesome"></i>Castles
+      <span id="count-castles" class="filter-count">0</span>
+    </div>
+    <div class="filter" data-filter="farms">
+      <i class="fa-solid fa-cow"></i>Farms
+      <span id="count-farms" class="filter-count">0</span>
+    </div>
+    <div class="filter" data-filter="beachfront">
+      <i class="fa-solid fa-umbrella-beach"></i>Beach
+      <span id="count-beachfront" class="filter-count">0</span>
+    </div>
+    <div class="filter" data-filter="pet-friendly">
+      <i class="fa-solid fa-paw"></i>Pet
+      <span id="count-pet-friendly" class="filter-count">0</span>
+    </div>
+  </div>
+
+  <div class="tax-toggle">
+    <span>Display total after taxes</span>
+    <div class="toggle-card active" id="taxToggleCard">GST On</div>
+  </div>
+</div>
+
+<!-- ================= SERVER-SIDE CATEGORY LOGIC (ONLY ONCE) ================= -->
+<%
+function autoCategorizeListing(listing) {
+  const title = (listing.title || '').toLowerCase();
+  const description = (listing.description || '').toLowerCase();
+  const location = (listing.location || '').toLowerCase();
+  const country = (listing.country || '').toLowerCase();
+  const price = listing.price || 0;
+
+  const categories = ['all'];
+
+  if (price > 2000 || title.includes('luxury') || description.includes('luxury'))
+    categories.push('trending');
+
+  if (title.includes('room') || title.includes('bed') || title.includes('apartment'))
+    categories.push('rooms');
+
+  const cities = ['mumbai','delhi','bangalore','chennai','pune','paris','london','dubai'];
+  if (cities.some(c => location.includes(c) || title.includes(c)))
+    categories.push('cities');
+
+  if (title.includes('mountain') || description.includes('trek'))
+    categories.push('mountains');
+
+  if (title.includes('castle') || title.includes('heritage') || description.includes('royal'))
+    categories.push('castles');
+
+  if (title.includes('farm') || description.includes('village'))
+    categories.push('farms');
+
+  if (title.includes('beach') || description.includes('sea'))
+    categories.push('beachfront');
+
+  if (description.includes('pet friendly') || title.includes('pet'))
+    categories.push('pet-friendly');
+
+  return [...new Set(categories)].join(',');
+}
+
+allListings.forEach(listing => {
+  listing.categoryString = autoCategorizeListing(listing);
+});
+%>
+
+<!-- ================= LISTINGS ================= -->
+<div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1" id="listingsContainer">
+  <% for (let listing of allListings) { %>
+    <div class="col listing-col" data-categories="<%= listing.categoryString %>">
+      <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark">
+        <div class="card">
+          <img src="<%= listing.image?.url || '/images/default.jpg' %>"
+               class="card-img-top"
+               style="height:20rem;object-fit:cover;">
+          <div class="card-body">
+            <b><%= listing.title %></b><br>
+            ₹ <%= listing.price.toLocaleString("en-IN") %> / night
+            <span class="tax-badge" style="display:inline-block;">+18% GST</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  <% } %>
+</div>
+
+<!-- ================= CLIENT JS ================= -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const filters = document.querySelectorAll(".filter");
+  const cards = document.querySelectorAll(".listing-col");
+  const taxToggleCard = document.getElementById("taxToggleCard");
+  const taxBadges = document.querySelectorAll(".tax-badge");
+
+  // Initialize toggle
+  let gstOn = true;
+
+  function updateTaxDisplay() {
+    taxBadges.forEach(badge => {
+      badge.style.display = gstOn ? "inline-block" : "none";
+    });
+    taxToggleCard.classList.toggle("active", gstOn);
+    taxToggleCard.textContent = gstOn ? "GST On" : "GST Off";
+  }
+
+  taxToggleCard.addEventListener("click", () => {
+    gstOn = !gstOn;
+    updateTaxDisplay();
+  });
+
+  // FILTERS
+  filters.forEach(filter => {
+    filter.addEventListener("click", () => {
+      filters.forEach(f => f.classList.remove("active"));
+      filter.classList.add("active");
+
+      const category = filter.dataset.filter;
+      cards.forEach(card => {
+        const cats = card.dataset.categories.split(",");
+        card.style.display =
+          category === "all" || cats.includes(category) ? "block" : "none";
+      });
+    });
+  });
+
+  // FILTER COUNTS
+  filters.forEach(filter => {
+    const category = filter.dataset.filter;
+    const count = [...cards].filter(card =>
+      category === "all" || card.dataset.categories.includes(category)
+    ).length;
+    document.getElementById(`count-${category}`).innerText = count;
+  });
+
+  // Initial tax display
+  updateTaxDisplay();
+});
+</script>

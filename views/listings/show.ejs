@@ -1,0 +1,662 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="page-wrapper">
+
+  <!-- ================= LISTING DETAIL ================= -->
+  <div class="listing-detail-container">
+
+    <div class="listing-image-container">
+     <img 
+  src="<%= listing.image?.url || listing.image || '/images/default.jpg' %>" 
+  alt="listing image"
+  class="listing-image-curved"
+>
+
+    </div>
+
+    <div class="listing-content">
+      <h1 class="listing-title"><%= listing.title %></h1>
+
+      <p class="listing-owner">
+        Hosted by
+        <span class="owner-name">
+          <%= listing.owner?.username || "Unknown Host" %>
+        </span>
+      </p>
+
+      <p class="listing-location">
+        <%= listing.location %>, <%= listing.country %>
+      </p>
+
+      <p class="listing-price">
+        ₹ <%= listing.price %> <span>/ night</span>
+      </p>
+
+      <p class="listing-description">
+        <%= listing.description %>
+      </p>
+
+      <% if (currUser && listing.owner?._id?.equals(currUser._id)) { %>
+        <div class="listing-actions">
+          <a href="/listings/<%= listing._id %>/edit" class="btn-edit">
+            <i class="fa fa-edit"></i> Edit
+          </a>
+
+          <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST">
+            <button class="btn-delete">
+              <i class="fa fa-trash"></i> Delete
+            </button>
+          </form>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- ================= RATING SYSTEM ================= -->
+<!-- ================= RATING SYSTEM ================= -->
+<div class="rating-page">
+  <div class="rating-main-container">
+
+    <% if (currUser) { %>
+      <div class="rating-card">
+        <h2>✨ Submit Your Rating</h2>
+        <span class="sub-text">We value your feedback</span>
+
+        <form action="/listings/<%= listing._id %>/reviews" method="POST">
+          <div class="star-box">
+            <% for(let i=1;i<=5;i++){ %>
+              <span class="star" data-value="<%= i %>">☆</span>
+            <% } %>
+          </div>
+          <input type="hidden" name="review[rating]" id="rating">
+
+          <div class="comment-label">
+            <span class="label-text">Your Review</span>
+            <span class="optional">Optional</span>
+          </div>
+          <textarea 
+            name="review[comment]" 
+            placeholder="Tell us about your experience..."
+            maxlength="1000"
+          ></textarea>
+          <div class="comment-footer">
+            <span>1000 character limit</span>
+          </div>
+
+          <button type="submit" class="submit-btn" disabled>
+            Submit Rating
+          </button>
+        </form>
+      </div>
+    <% } %>
+
+    <!-- ALL RATINGS SECTION - PROFESSIONAL STYLE -->
+    <div class="rating-card">
+      <h2>All Ratings</h2>
+      <p>Community feedback and reviews</p>
+
+      <% if (listing.reviews.length === 0) { %>
+        <div class="no-rating-box">
+          <i class="fa-regular fa-star"></i>
+          <h3>No ratings yet</h3>
+          <p>Be the first to share your feedback!</p>
+        </div>
+      <% } else { %>
+        <% for (let review of listing.reviews) { %>
+          <div class="review-card-pro">
+            <!-- Review Header with Profile Icon -->
+            <div class="review-header-pro">
+              <div class="reviewer-info">
+                <!-- Profile Icon (Initial of username) -->
+                <div class="profile-icon">
+                  <% if (review.author && review.author.username) { %>
+                    <i class="fa-solid fa-user"></i>
+                  <% } else { %>
+                    <i class="fa-solid fa-user-circle"></i>
+                  <% } %>
+                </div>
+                
+                <!-- User Name and Time -->
+                <div class="reviewer-details">
+                  <div class="reviewer-name">
+                    <%= review.author?.username || "Anonymous User" %>
+                  </div>
+                  <div class="review-time">
+                    <% 
+                      // Calculate time ago
+                      const reviewDate = new Date(review.createdAt || Date.now());
+                      const now = new Date();
+                      const diffTime = Math.abs(now - reviewDate);
+                      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                      const diffMonths = Math.floor(diffDays / 30);
+                      const diffYears = Math.floor(diffDays / 365);
+                      
+                      let timeAgo;
+                      if (diffYears > 0) {
+                        timeAgo = diffYears === 1 ? 'a year ago' : `${diffYears} years ago`;
+                      } else if (diffMonths > 0) {
+                        timeAgo = diffMonths === 1 ? 'a month ago' : `${diffMonths} months ago`;
+                      } else if (diffDays > 0) {
+                        timeAgo = diffDays === 1 ? 'a day ago' : `${diffDays} days ago`;
+                      } else {
+                        timeAgo = 'today';
+                      }
+                    %>
+                    <%= timeAgo %>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Star Rating (Filled Stars) -->
+              <div class="review-stars-pro">
+                <% for (let i = 1; i <= 5; i++) { %>
+                  <% if (i <= review.rating) { %>
+                    <i class="fas fa-star"></i>
+                  <% } else { %>
+                    <i class="far fa-star"></i>
+                  <% } %>
+                <% } %>
+              </div>
+            </div>
+
+            <!-- Review Comment with See More -->
+            <div class="review-comment-pro">
+              <div class="comment-text">
+                <%= review.comment %>
+              </div>
+              <% if (review.comment.length > 200) { %>
+                <button class="see-more-btn" onclick="toggleReadMore(this)">
+                  See more
+                </button>
+              <% } %>
+            </div>
+
+            <!-- Delete Button (Only for review author) -->
+            <% if (currUser && review.author && review.author._id.equals(currUser._id)) { %>
+              <div class="review-actions">
+                <form 
+                  action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
+                  method="POST"
+                  onsubmit="return confirm('Are you sure you want to delete this review?')"
+                >
+                  <button type="submit" class="delete-btn-pro">
+                    <i class="fas fa-trash-alt"></i> Delete
+                  </button>
+                </form>
+              </div>
+            <% } %>
+          </div>
+        <% } %>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<script src="/js/rev.js"></script>
+
+<!-- ========== MAP SECTION ========== -->
+<section class="map-section mt-5">
+
+  <div class="row g-0">
+    <div class="col-12">
+     <div class="map-card map-fullwidth shadow-lg overflow-hidden">
+
+        <!-- Map Header -->
+        <div class="map-header d-flex align-items-center justify-content-between p-4">
+          <div>
+            <h3 class="map-title mb-1">
+              <i class="fas fa-map-marker-alt text-danger me-2"></i>Location
+            </h3>
+            <p class="map-subtitle text-muted mb-0">
+              <%= listing.location %>, <%= listing.country %>
+            </p>
+          </div>
+          <div class="location-accuracy-badge">
+            <span class="badge bg-success bg-opacity-10 text-success px-3 py-2">
+              <i class="fas fa-check-circle me-1"></i>Location confirmed
+            </span>
+          </div>
+        </div>
+        
+        <!-- Map Preview Container -->
+        <div class="map-preview-container position-relative">
+          <!-- Map Background -->
+          <div class="map-background" id="mapBackground">
+            <!-- This will be styled with CSS to look like a map -->
+            <div class="map-grid">
+              <div class="map-grid-line horizontal"></div>
+              <div class="map-grid-line vertical"></div>
+              <div class="map-grid-point" style="top: 40%; left: 60%;"></div>
+              <div class="map-grid-point" style="top: 70%; left: 40%;"></div>
+              <div class="map-grid-point" style="top: 30%; left: 30%;"></div>
+            </div>
+            
+            <!-- Location Pin -->
+            <div class="location-pin">
+              <div class="pin-icon">
+                <i class="fas fa-map-pin"></i>
+              </div>
+              <div class="pin-pulse"></div>
+            </div>
+            
+            <!-- Map Labels -->
+            <div class="map-label" style="top: 20%; left: 20%;">Downtown</div>
+            <div class="map-label" style="top: 60%; left: 70%;">Beach</div>
+            <div class="map-label" style="top: 80%; left: 40%;">Shopping</div>
+          </div>
+          
+          <!-- Map Overlay Info -->
+          <div class="map-overlay-info">
+            <div class="info-card p-3 rounded-3 shadow-sm">
+              <div class="d-flex align-items-center mb-2">
+                <div class="info-icon me-2">
+                  <i class="fas fa-walking"></i>
+                </div>
+                <div>
+                  <h6 class="mb-0">Walk Score: 85</h6>
+                  <small class="text-muted">Very Walkable</small>
+                </div>
+              </div>
+              <div class="d-flex align-items-center">
+                <div class="info-icon me-2">
+                  <i class="fas fa-subway"></i>
+                </div>
+                <div>
+                  <h6 class="mb-0">Transit Nearby</h6>
+                  <small class="text-muted">2 min to bus stop</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Map Footer with CTA -->
+        <div class="map-footer p-4 border-top">
+          <div class="row align-items-center">
+            <div class="col-md-8 mb-3 mb-md-0">
+              <p class="map-disclaimer text-muted mb-0">
+                <i class="fas fa-info-circle me-1"></i>
+                Exact location provided after booking
+              </p>
+              <small class="text-muted">
+                Your privacy is protected. Full address shown after reservation confirmation.
+              </small>
+            </div>
+            <div class="col-md-4 text-md-end">
+              <!-- Dynamic Google Maps Link -->
+              <a 
+                href="https://www.google.com/maps/search/?api=1&query=<%= encodeURIComponent(listing.location + ', ' + listing.country) %>" 
+                target="_blank" 
+                class="btn-map-cta btn btn-primary btn-lg px-4 py-3 rounded-pill shadow-sm"
+                id="openGoogleMaps"
+              >
+                <i class="fas fa-external-link-alt me-2"></i>
+                View on Google Maps
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Location Details (Collapsible) -->
+        <div class="location-details border-top">
+          <button class="btn btn-link w-100 text-decoration-none p-3 d-flex align-items-center justify-content-between" 
+                  type="button" 
+                  data-bs-toggle="collapse" 
+                  data-bs-target="#locationMoreInfo">
+            <span>
+              <i class="fas fa-chevron-down me-2"></i>
+              What's nearby
+            </span>
+            <small class="text-muted">Click to expand</small>
+          </button>
+          <div class="collapse" id="locationMoreInfo">
+            <div class="p-4 pt-0">
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <h6><i class="fas fa-utensils text-primary me-2"></i>Restaurants</h6>
+                  <ul class="list-unstyled mb-0">
+                    <li><small>• 5 min walk: Local Cafe</small></li>
+                    <li><small>• 8 min walk: Fine Dining</small></li>
+                  </ul>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <h6><i class="fas fa-shopping-bag text-success me-2"></i>Shopping</h6>
+                  <ul class="list-unstyled mb-0">
+                    <li><small>• 10 min walk: Supermarket</small></li>
+                    <li><small>• 15 min walk: Shopping Mall</small></li>
+                  </ul>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <h6><i class="fas fa-landmark text-warning me-2"></i>Attractions</h6>
+                  <ul class="list-unstyled mb-0">
+                    <li><small>• 20 min walk: City Park</small></li>
+                    <li><small>• 5 min drive: Museum</small></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ========== END MAP SECTION ========== -->
+ <style>
+/* ===== FIX MAP + FOOTER MERGE ISSUE ===== */
+
+/* Map section spacing */
+.map-section {
+  margin-bottom: 0;
+  padding-bottom: 24px;
+}
+
+/* Strong visual end for map */
+.map-card {
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+}
+
+/* Divider between map and footer */
+.map-section::after {
+  content: "";
+  display: block;
+  height: 32px;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.08),
+    rgba(0,0,0,0)
+  );
+}
+/* ===== LOCATION CONTAINER BORDER ===== */
+
+.map-card {
+  border: 1px solid rgba(0, 0, 0, 0.15); /* slight black border */
+}
+
+.map-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1) !important;
+}
+
+.map-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.map-title {
+  font-weight: 700;
+  color: #222;
+  font-size: 1.5rem;
+}
+
+.map-subtitle {
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.location-accuracy-badge {
+  animation: fadeIn 0.5s ease;
+}
+
+/* Map Preview Container */
+.map-preview-container {
+  height: 400px;
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.map-background {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: linear-gradient(135deg, #b8e1ff 0%, #a1c4fd 100%);
+}
+
+.map-grid {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0.4;
+}
+
+.map-grid-line {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.map-grid-line.horizontal {
+  width: 100%;
+  height: 1px;
+  top: 33.33%;
+}
+
+.map-grid-line.vertical {
+  height: 100%;
+  width: 1px;
+  left: 50%;
+}
+
+.map-grid-point {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.map-label {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #333;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+
+/* Location Pin */
+.location-pin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  z-index: 10;
+  animation: float 3s ease-in-out infinite;
+}
+
+.pin-icon {
+  width: 50px;
+  height: 50px;
+  background: #ff385c;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(255, 56, 92, 0.3);
+}
+
+.pin-icon i {
+  transform: rotate(45deg);
+  color: white;
+  font-size: 1.2rem;
+}
+
+.pin-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(255, 56, 92, 0.2);
+  animation: pulse 2s infinite;
+}
+
+/* Map Overlay Info */
+.map-overlay-info {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  max-width: 250px;
+}
+
+.info-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.info-icon {
+  width: 36px;
+  height: 36px;
+  background: #f0f7ff;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4a6fff;
+}
+
+/* Map Footer */
+.map-footer {
+  background: #f9f9f9;
+}
+
+.btn-map-cta {
+  background: linear-gradient(135deg, #4a6fff 0%, #6a11cb 100%);
+  border: none;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-map-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(106, 17, 203, 0.3) !important;
+  color: white;
+}
+
+.btn-map-cta:active {
+  transform: translateY(0);
+}
+
+.btn-map-cta::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.7s ease;
+}
+
+.btn-map-cta:hover::after {
+  left: 100%;
+}
+
+/* Location Details */
+.location-details .btn-link {
+  color: #333;
+  font-weight: 600;
+  background: #f8f9fa;
+  transition: all 0.3s ease;
+}
+
+.location-details .btn-link:hover {
+  background: #e9ecef;
+  color: #4a6fff;
+}
+
+.location-details .btn-link[aria-expanded="true"] i {
+  transform: rotate(180deg);
+}
+
+.location-details .btn-link i {
+  transition: transform 0.3s ease;
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% {
+    transform: translate(-50%, -100%) translateY(0);
+  }
+  50% {
+    transform: translate(-50%, -100%) translateY(-8px);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0.7;
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.3);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .map-preview-container {
+    height: 300px;
+  }
+  
+  .map-overlay-info {
+    position: relative;
+    top: auto;
+    right: auto;
+    max-width: 100%;
+    margin: 20px;
+  }
+  
+  .map-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+  
+  .location-accuracy-badge {
+    margin-top: 10px;
+  }
+  
+  .btn-map-cta {
+    width: 100%;
+  }
+}
+/* ===== FORCE FOOTER FULL WIDTH (PAGE LEVEL FIX) ===== */
+
+footer {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+}
+
+ </style>
+ <script src="/js/map.js"></script>

@@ -1,0 +1,209 @@
+<% layout("/layouts/boilerplate") %>
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #f7f7f7;
+}
+
+/* ===== PAGE ===== */
+.edit-page {
+  padding: 40px 0;
+}
+
+/* ===== CARD ===== */
+.edit-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 40px;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.08);
+}
+
+/* ===== TITLE ===== */
+.edit-title {
+  font-size: 1.7rem;
+  font-weight: 700;
+  margin-bottom: 25px;
+}
+
+/* ===== LABELS ===== */
+.form-label {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+/* ===== INPUTS ===== */
+.form-control {
+  height: 50px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+}
+
+textarea.form-control {
+  height: auto;
+}
+
+.form-control:focus {
+  box-shadow: none;
+  border-color: #ff385c;
+}
+
+/* ===== IMAGE PREVIEW ===== */
+.edit-preview-img {
+  width: 100%;
+  max-width: 280px;
+  border-radius: 14px;
+  margin-top: 10px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* ===== BUTTON ===== */
+.btn-danger {
+  padding: 14px 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  background: linear-gradient(to right, #ff385c, #ff5a5f);
+  border: none;
+}
+
+.btn-danger:hover {
+  box-shadow: 0 10px 25px rgba(255,56,92,0.35);
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .edit-card {
+    padding: 30px 20px;
+  }
+}
+</style>
+
+<div class="container edit-page">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+
+      <div class="edit-card">
+
+        <h3 class="edit-title">Edit your Listing</h3>
+
+        <form
+          method="POST"
+          action="/listings/<%= listing._id %>?_method=PUT"
+          class="needs-validation"
+          enctype="multipart/form-data"
+          novalidate
+        >
+
+          <!-- TITLE -->
+          <div class="mb-4">
+            <label class="form-label">Title</label>
+            <input
+              name="listing[title]"
+              value="<%= listing.title %>"
+              type="text"
+              class="form-control"
+              required
+            />
+            <div class="invalid-feedback">Title is required</div>
+          </div>
+
+          <!-- DESCRIPTION -->
+          <div class="mb-4">
+            <label class="form-label">Description</label>
+            <textarea
+              name="listing[description]"
+              class="form-control"
+              rows="4"
+              required
+            ><%= listing.description %></textarea>
+            <div class="invalid-feedback">Description is required</div>
+          </div>
+
+          <!-- ORIGINAL IMAGE -->
+          <div class="mb-4">
+            <label class="form-label">Original Listing Image</label><br />
+            <% if (listing.image && listing.image.url) { %>
+              <img src="<%= listing.image.url %>" class="edit-preview-img" />
+            <% } %>
+          </div>
+
+          <!-- UPLOAD NEW IMAGE -->
+          <div class="mb-4">
+            <label class="form-label">Upload New Image</label>
+            <input
+              name="image"
+              type="file"
+              class="form-control"
+            />
+          </div>
+
+          <!-- PRICE + COUNTRY -->
+          <div class="row">
+            <div class="col-md-6 mb-4">
+              <label class="form-label">Price</label>
+              <input
+                name="listing[price]"
+                value="<%= listing.price %>"
+                type="number"
+                class="form-control"
+                min="1"
+                required
+              />
+              <div class="invalid-feedback">
+                Price must be greater than 0
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+              <label class="form-label">Country</label>
+              <input
+                name="listing[country]"
+                value="<%= listing.country %>"
+                type="text"
+                class="form-control"
+                required
+                pattern="[A-Za-z\s-]+"
+              />
+              <div class="invalid-feedback">
+                Country must contain only letters
+              </div>
+            </div>
+          </div>
+
+          <!-- LOCATION -->
+          <div class="mb-4">
+            <label class="form-label">Location</label>
+            <input
+              name="listing[location]"
+              value="<%= listing.location %>"
+              type="text"
+              class="form-control"
+              required
+              pattern="[A-Za-z\s.-]+"
+            />
+            <div class="invalid-feedback">
+              Location must contain only letters
+            </div>
+          </div>
+
+          <!-- BUTTON -->
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-danger">
+              Update Listing
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ONLY THIS JS -->
+<script src="/js/edit.js"></script>

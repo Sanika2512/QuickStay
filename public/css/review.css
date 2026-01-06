@@ -1,0 +1,309 @@
+/* ================= PROFESSIONAL REVIEW CARD ================= */
+
+/* Main container for all ratings */
+.rating-card {
+  background-color: #f0f0f0;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  max-width: 1200px;        /* 🔥 MAIN FIX */
+  width: 100%;
+  margin: 40px auto;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+
+/* Heading */
+.rating-card h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #222222;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.rating-card p {
+  font-size: 14px;
+  color: #717171;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* Individual Review Card - Professional Style */
+.review-card-pro {
+  border: 1px solid #dddddd;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  background: #fff;
+  transition: box-shadow 0.2s ease;
+}
+
+.review-card-pro:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* Review Header with Profile */
+.review-header-pro {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.reviewer-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Profile Icon - Circle with Grey Background */
+.profile-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #f7f7f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #717171;
+  font-size: 24px;
+}
+
+.profile-icon i {
+  color: #717171;
+}
+
+.reviewer-details {
+  flex: 1;
+}
+
+.reviewer-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #222222;
+  margin-bottom: 4px;
+}
+
+.review-time {
+  font-size: 14px;
+  color: #717171;
+  font-weight: 400;
+}
+
+/* Star Ratings */
+.review-stars-pro {
+  color: #FF385C;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.review-stars-pro .fa-star {
+  margin-right: 2px;
+}
+
+/* Review Comment */
+.review-comment-pro {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #222222;
+  margin-bottom: 20px;
+}
+
+/* Read More/Less Functionality */
+.comment-text {
+  margin-bottom: 10px;
+}
+
+.see-more-btn {
+  background: none;
+  border: none;
+  color: #FF385C;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.see-more-btn:hover {
+  color: #e31b4c;
+}
+
+/* Delete Button Section */
+.review-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.delete-btn-pro {
+  background-color: #222222;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.delete-btn-pro:hover {
+  background-color: #000000;
+}
+
+.delete-btn-pro i {
+  font-size: 12px;
+}
+
+/* No Ratings State */
+.no-rating-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  background-color: #fafafa;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.no-rating-box i {
+  font-size: 48px;
+  color: #717171;
+  background-color: #f0f0f0;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.no-rating-box h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #222222;
+  margin-bottom: 8px;
+}
+
+.no-rating-box p {
+  font-size: 16px;
+  color: #717171;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Star rating in review form */
+.star-box {
+  background: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 18px;
+  margin: 10px 0 20px;
+  text-align: center;
+}
+
+.star {
+  font-size: 34px;
+  color: #9ca3af;
+  cursor: pointer;
+  margin: 0 6px;
+  transition: color 0.2s;
+}
+
+.star:hover {
+  color: #fbbf24;
+}
+
+.star.active {
+  color: #fbbf24;
+}
+
+/* Comment form styling */
+.comment-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 6px;
+}
+
+.comment-label .label-text {
+  font-weight: 600;
+  color: #222222;
+}
+
+.comment-label .optional {
+  font-size: 13px;
+  color: #717171;
+}
+
+textarea {
+  width: 100%;
+  height: 90px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  resize: none;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.comment-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #717171;
+  margin-top: 6px;
+}
+
+/* Submit button */
+.submit-btn {
+  width: auto;              /* 🔥 stop full width */
+  min-width: 220px;         /* nice balanced size */
+  background: #FF385C;
+  border: none;
+  color: #fff;
+  padding: 14px 32px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 24px auto 0;      /* center horizontally */
+  display: block;           /* required for auto margin */
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.15s;
+}
+
+.submit-btn:hover {
+  background: #e31b4c;
+  transform: translateY(-1px);
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .rating-card {
+    padding: 16px;
+    margin: 20px auto;
+  }
+  
+  .review-card-pro {
+    padding: 16px;
+  }
+  
+  .review-header-pro {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .review-actions {
+    justify-content: flex-start;
+  }
+}
