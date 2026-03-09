@@ -73,7 +73,7 @@ Property owners can manage their listings, and administrators have full control 
 
 ### Installation
 ```bash
-git clone https://github.com/Sanika2512/Wanderlust.git
+git clone https://github.com/Sanika2512/QuickStay.git
 cd WanderLust
 npm install
 
