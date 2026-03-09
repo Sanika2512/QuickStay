@@ -1,6 +1,6 @@
-# WanderLust 🌍
+# QuickStay 🌍
 
-WanderLust is a full-featured property rental web application inspired by Airbnb.  
+ QuickStay is a full-featured property rental web application inspired by Airbnb.  
 It helps users find the best stays, villas, and holiday homes across India.  
 Users can explore properties, filter them in real-time, and book the perfect stay.  
 Property owners can manage their listings, and administrators have full control over the platform.
