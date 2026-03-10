@@ -37,17 +37,20 @@ Property owners can manage their listings, and administrators have full control 
 
 ## Screenshots 📸
 
-![Screenshot1](https://github.com/user-attachments/assets/bcb15709-6282-44fc-a54b-494ef4924ebd)  
-![Screenshot2](https://github.com/user-attachments/assets/8ee12e79-c357-418f-aa44-81228c5e6688)
-![Screenshot3](https://github.com/user-attachments/assets/a104da5a-ea11-4ce9-9a27-62a0ae5366c4)  
-![Screenshot4](https://github.com/user-attachments/assets/84eddaec-5fe0-4f2f-9cce-9b62e477af68)  
-![Screenshot5](https://github.com/user-attachments/assets/15aeb47c-7000-4a04-be4c-85f2b450002f)  
-![Screenshot6](https://github.com/user-attachments/assets/8afc03c1-f0ac-44ae-9c14-e4ba4997c42a)  
-![Screenshot7](https://github.com/user-attachments/assets/3646fa6c-a688-4041-ab2e-ce95e2b16cc0)  
-![Screenshot8](https://github.com/user-attachments/assets/5d167577-068e-4947-9944-7927b4b92467)  
-![Screenshot9](https://github.com/user-attachments/assets/6cee47de-5ba6-4420-b105-8d620e9b686c)
+<img width="1920" height="885" alt="11" src="https://github.com/user-attachments/assets/0e7d2672-d92c-4e1b-b71b-8a387369fa02" />
+
+<img width="1920" height="902" alt="13" src="https://github.com/user-attachments/assets/f8ef402c-840b-4e48-b728-1633f67d77f4" />
+
+<img width="1920" height="891" alt="14" src="https://github.com/user-attachments/assets/76e88b11-6cc4-473c-8ea0-81faf51feeab" />
 
 ---
+<img width="1900" height="884" alt="16" src="https://github.com/user-attachments/assets/96626b7b-4b82-474e-8090-b9fd328b9573" />
+
+<img width="1898" height="865" alt="17" src="https://github.com/user-attachments/assets/af21f9c9-a395-4d95-884d-4e5400aa6a4c" />
+
+<img width="1883" height="874" alt="18" src="https://github.com/user-attachments/assets/9ea46b83-3c59-484e-aec1-140f4fc79756" />
+
+<img width="1878" height="874" alt="21" src="https://github.com/user-attachments/assets/49ebbaf4-da24-4927-be7e-480f18c302d6" />
 
 ## Tech Stack 🛠️
 
